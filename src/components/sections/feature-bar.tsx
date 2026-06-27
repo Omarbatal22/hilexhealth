@@ -12,9 +12,10 @@ const ACCENT: Record<FeatureCard["accent"], string> = {
 };
 
 /**
- * Dark feature bar — a single navy slab that bridges the hero and the
- * service grid. Four quick value props sit side by side, separated by
- * hairline rules on desktop and stacked two-up on smaller screens.
+ * Dark feature bar — a single navy slab of four quick value props. It sits
+ * below the booking section (out of the first viewport), bridging into the
+ * service grid. Four props side by side, separated by hairline rules on
+ * desktop and stacked two-up on smaller screens.
  */
 export function FeatureBar() {
   return (

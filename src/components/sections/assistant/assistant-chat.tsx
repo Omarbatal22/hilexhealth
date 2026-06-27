@@ -21,7 +21,12 @@ import { cn } from "@/lib/utils";
 let idCounter = 0;
 const nextId = () => `msg-${++idCounter}`;
 
-export function AssistantChat() {
+export function AssistantChat({
+  initialPrompt,
+}: {
+  /** When set, this message is auto-sent once as the first user turn. */
+  initialPrompt?: string;
+} = {}) {
   const [messages, setMessages] =
     React.useState<ChatMessage[]>(SEED_CONVERSATION);
   const [input, setInput] = React.useState("");
@@ -59,6 +64,15 @@ export function AssistantChat() {
     e.preventDefault();
     send(input);
   }
+
+  // Auto-send the pre-filled prompt once (e.g. arriving from a Hero chip).
+  const firedInitial = React.useRef(false);
+  React.useEffect(() => {
+    if (initialPrompt && !firedInitial.current) {
+      firedInitial.current = true;
+      send(initialPrompt);
+    }
+  }, [initialPrompt, send]);
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-[#f6f3ff] via-soft-bg to-white">

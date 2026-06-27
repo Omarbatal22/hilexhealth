@@ -4,33 +4,27 @@ import { motion } from "framer-motion";
 import {
   Activity,
   ArrowRight,
-  Calendar,
-  ChevronDown,
-  MapPin,
-  Search,
+  ArrowUp,
   ShieldPlus,
   Sparkles,
-  Stethoscope,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { HeroDecorations } from "@/components/decor/hero-decorations";
 import { EASE } from "@/lib/motion";
-import { TRUST_ITEMS } from "@/lib/site-data";
+import {
+  HERO_AI_PLACEHOLDER,
+  HERO_PROMPT_CHIPS,
+  TRUST_ITEMS,
+} from "@/lib/site-data";
 import { cn } from "@/lib/utils";
 
-const FILTERS = [
-  { icon: Stethoscope, label: "Specialty" },
-  { icon: MapPin, label: "Location" },
-  { icon: Calendar, label: "Availability" },
-] as const;
-
 /**
- * Hero band — the first screen. Left column carries the message + search;
- * right column the layered medical illustration with floating AI cards.
- * The four-item trust strip sits beneath, closing the band (the dark
- * feature bar that follows lives in its own section).
+ * Hero band — the first screen. One primary action: talk to the AI. The left
+ * column carries the message + a compact AI prompt bar (an entry point to the
+ * chat, not a search form) with suggestion chips; the right column the layered
+ * medical illustration. The four-item trust strip closes the band.
  */
 export function Hero() {
   return (
@@ -38,9 +32,9 @@ export function Hero() {
       <HeroDecorations />
 
       <Container className="relative">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
-          {/* ---------- Left: message + search ---------- */}
-          <div className="max-w-xl">
+        <div className="grid items-center gap-10 lg:grid-cols-[45fr_55fr] lg:gap-10">
+          {/* ---------- Left: message + AI prompt bar ---------- */}
+          <div className="max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
@@ -71,53 +65,43 @@ export function Hero() {
             >
               AI-powered care that understands you.
               <br className="hidden sm:block" />
-              Find the right doctor. Get answers. Feel better.
+              Describe how you feel and get answers in seconds.
             </motion.p>
 
-            {/* Search card */}
+            {/* AI prompt bar — a conversation starter, links straight to chat */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.24 }}
-              className="glass-strong mt-8 rounded-[var(--radius-xl2)] p-3 shadow-[var(--shadow-large)]"
+              className="mt-8"
             >
-              <form
-                className="flex items-center gap-2"
-                onSubmit={(e) => e.preventDefault()}
-                role="search"
+              <Link
+                href="/ai-chat"
+                aria-label="Start a conversation with Helix AI"
+                className="glass-strong group flex h-16 items-center gap-3 rounded-full px-3 pl-5 shadow-[var(--shadow-large)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-15px_rgba(124,58,237,0.4)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ai"
               >
-                <div className="flex flex-1 items-center gap-3 rounded-2xl px-4">
-                  <Search className="h-5 w-5 shrink-0 text-ink-muted" />
-                  <input
-                    type="text"
-                    placeholder="Search doctors, specialties, conditions..."
-                    aria-label="Search doctors, specialties, conditions"
-                    className="h-12 w-full bg-transparent text-[15px] text-navy placeholder:text-ink-muted focus:outline-none"
-                  />
-                </div>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="icon"
-                  aria-label="Search"
-                  className="h-12 w-12"
-                >
-                  <Search className="h-5 w-5" />
-                </Button>
-              </form>
+                <span className="ai-glow inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-ai to-ai-light text-white">
+                  <Sparkles className="h-4.5 w-4.5" />
+                </span>
+                <span className="flex-1 truncate text-[15px] text-ink-muted">
+                  {HERO_AI_PLACEHOLDER}
+                </span>
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ai text-white shadow-[var(--shadow-medium)] transition-transform group-hover:translate-y-[-1px] group-hover:scale-105">
+                  <ArrowUp className="h-5 w-5" />
+                </span>
+              </Link>
 
-              {/* Filter chips */}
-              <div className="mt-2 flex flex-wrap gap-2 px-1 pb-1">
-                {FILTERS.map(({ icon: Icon, label }) => (
-                  <button
+              {/* Suggestion chips — each pre-fills the AI chat */}
+              <div className="mt-3.5 flex flex-wrap gap-2">
+                {HERO_PROMPT_CHIPS.map(({ icon: Icon, label, prompt }) => (
+                  <Link
                     key={label}
-                    type="button"
-                    className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-white px-4 py-2 text-sm font-medium text-ink-soft transition-all hover:border-primary/50 hover:bg-primary-bg hover:text-primary"
+                    href={`/ai-chat?q=${encodeURIComponent(prompt)}`}
+                    className="inline-flex items-center gap-2 rounded-full border border-transparent bg-primary-soft/60 px-4 py-2 text-sm font-medium text-ink-soft transition-all hover:-translate-y-0.5 hover:border-primary/50 hover:bg-white hover:text-primary"
                   >
                     <Icon className="h-4 w-4 text-primary" />
                     {label}
-                    <ChevronDown className="h-3.5 w-3.5 opacity-60" />
-                  </button>
+                  </Link>
                 ))}
               </div>
             </motion.div>

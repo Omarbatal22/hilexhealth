@@ -1,5 +1,6 @@
 import { ArrowRight, Lock, ShieldCheck, ShieldPlus } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
+import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
@@ -104,6 +105,16 @@ export function Footer() {
                         </a>
                       </li>
                     ))}
+                    {col.title === "Company" && (
+                      <li>
+                        <Link
+                          href="/provider/dashboard"
+                          className="text-sm text-ink-soft transition-colors hover:text-primary"
+                        >
+                          For providers
+                        </Link>
+                      </li>
+                    )}
                   </ul>
                   {col.title === "Top Specialties" && (
                     <a
