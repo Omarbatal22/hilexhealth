@@ -1,28 +1,98 @@
 "use client";
 
-import { CalendarCheck, Check, Video } from "lucide-react";
+import { CalendarCheck, Check, Video, MapPin } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { AVAILABILITY_DAYS, TIME_SLOTS, type Doctor } from "@/lib/doctors";
+import { AVAILABILITY_DAYS, type Doctor } from "@/lib/doctors";
 import { cn } from "@/lib/utils";
+import { BRANCHES, getScheduleForDoctorAtBranch } from "@/lib/clinics";
 
-/**
- * Sticky booking widget on the doctor profile. Pick a day + slot, then proceed
- * to the (mock) booking flow. No backend — selection is local state only.
- */
 export function BookingWidget({ doctor }: { doctor: Doctor }) {
+  // Find branches this doctor practices at
+  const doctorBranches = React.useMemo(() => {
+    return BRANCHES.filter((b) => b.doctorIds.includes(doctor.slug));
+  }, [doctor]);
+
+  const [selectedBranchId, setSelectedBranchId] = React.useState(
+    doctorBranches[0]?.id || ""
+  );
+
+  const activeBranch = React.useMemo(() => {
+    return doctorBranches.find((b) => b.id === selectedBranchId);
+  }, [doctorBranches, selectedBranchId]);
+
+
+
+  const schedule = React.useMemo(() => {
+    if (!activeBranch) return null;
+    return getScheduleForDoctorAtBranch(doctor.slug, activeBranch.id);
+  }, [doctor, activeBranch]);
+
+  const slots = React.useMemo(() => {
+    return schedule?.slots || ["9:00 AM", "10:30 AM", "2:15 PM", "4:30 PM"];
+  }, [schedule]);
+
+  const fee = schedule?.feeUsd || doctor.feeUsd;
+
   const firstOpen = AVAILABILITY_DAYS.findIndex((d) => d.slots > 0);
   const [dayIdx, setDayIdx] = React.useState(firstOpen === -1 ? 0 : firstOpen);
   const [slot, setSlot] = React.useState<string | null>(null);
 
+
+
+  const selectedDateStr = `${AVAILABILITY_DAYS[dayIdx].day}, ${AVAILABILITY_DAYS[dayIdx].date}`;
+
+  // Build redirection link to the wizard
+  const confirmHref = activeBranch
+    ? `/book?doctor=${doctor.slug}&clinic=${activeBranch.facilityId}&branch=${
+        activeBranch.slug
+      }&date=${encodeURIComponent(selectedDateStr)}&time=${encodeURIComponent(slot || "")}`
+    : "#";
+
   return (
     <div className="rounded-[var(--radius-card)] border border-border-soft bg-white p-6 shadow-[var(--shadow-medium)]">
+      {/* Branch Selector */}
+      {doctorBranches.length > 1 && (
+        <div className="mb-5">
+          <label htmlFor="widget-branch" className="mb-2.5 block text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
+            Select Clinic Branch
+          </label>
+          <select
+            id="widget-branch"
+            value={selectedBranchId}
+            onChange={(e) => {
+              setSelectedBranchId(e.target.value);
+              setSlot(null);
+            }}
+            className="w-full rounded-xl border border-border-soft bg-surface px-3 py-2 text-sm text-ink-soft focus:border-primary focus:outline-none"
+          >
+            {doctorBranches.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {activeBranch && (
+        <div className="mb-4 flex items-start gap-2 rounded-xl bg-surface/50 border border-border-soft/60 p-2.5 text-xs text-ink-soft">
+          <MapPin className="h-4 w-4 text-ink-muted shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-navy">{activeBranch.name}</p>
+            <p className="mt-0.5 text-ink-muted line-clamp-1">
+              {activeBranch.address.street}, {activeBranch.address.area}
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-baseline justify-between">
         <div>
           <p className="text-xs text-ink-muted">Consultation fee</p>
           <p className="font-display text-3xl font-bold text-navy">
-            ${doctor.feeUsd}
+            ${fee}
           </p>
         </div>
         {doctor.videoVisit && (
@@ -85,7 +155,7 @@ export function BookingWidget({ doctor }: { doctor: Doctor }) {
           Available times
         </p>
         <div className="grid grid-cols-3 gap-2">
-          {TIME_SLOTS.map((t) => {
+          {slots.map((t) => {
             const active = slot === t;
             return (
               <button
@@ -109,10 +179,9 @@ export function BookingWidget({ doctor }: { doctor: Doctor }) {
       {/* Selection summary + CTA */}
       <div className="mt-6 space-y-3">
         {slot && (
-          <p className="flex items-center gap-2 rounded-xl bg-success/10 px-3 py-2 text-sm font-medium text-success">
+          <p className="flex items-center gap-2 rounded-xl bg-success/10 px-3 py-2 text-sm font-medium text-success animate-fade-in">
             <Check className="h-4 w-4" />
-            {AVAILABILITY_DAYS[dayIdx].day}, {AVAILABILITY_DAYS[dayIdx].date} at{" "}
-            {slot}
+            {selectedDateStr} at {slot}
           </p>
         )}
         <Button
@@ -123,7 +192,7 @@ export function BookingWidget({ doctor }: { doctor: Doctor }) {
           asChild={!!slot}
         >
           {slot ? (
-            <Link href={`/book/${doctor.slug}`}>
+            <Link href={confirmHref}>
               <CalendarCheck className="h-5 w-5" /> Confirm booking
             </Link>
           ) : (

@@ -14,6 +14,7 @@ export interface ChatMessage {
   content: string;
   /** assistant follow-up suggestion chips */
   suggestions?: string[];
+  recommendations?: { doctorSlugs?: string[]; clinicSlugs?: string[] };
 }
 
 /** Seed conversation shown when the assistant first loads. */
@@ -40,6 +41,7 @@ export interface CannedReply {
   match: RegExp;
   reply: string;
   suggestions?: string[];
+  recommendations?: { doctorSlugs?: string[]; clinicSlugs?: string[] };
 }
 
 export const CANNED_REPLIES: CannedReply[] = [
@@ -48,6 +50,7 @@ export const CANNED_REPLIES: CannedReply[] = [
     reply:
       "Headaches paired with fatigue are common and often tied to dehydration, stress, poor sleep, or screen strain. A few things that can help right now:\n\n• Drink a glass of water and rest your eyes for 15 minutes\n• Check whether you've eaten recently — low blood sugar is a frequent trigger\n• Note if there's any tension in your neck or shoulders\n\n⚠️ Seek prompt care if the headache is sudden and severe, follows a head injury, or comes with vision changes, confusion, or a stiff neck. Would you like me to find a neurologist near you?",
     suggestions: ["Find a neurologist", "How much water should I drink?", "Track this symptom"],
+    recommendations: { doctorSlugs: ["michael-chen"], clinicSlugs: ["helix-medical-center"] },
   },
   {
     match: /lab|result|cholesterol|glucose|blood test/i,
@@ -60,6 +63,7 @@ export const CANNED_REPLIES: CannedReply[] = [
     reply:
       "Great question — going in prepared makes a big difference. For your cardiology visit, consider asking:\n\n1. What do my blood pressure and cholesterol numbers mean for my long-term risk?\n2. Are my current medications still the right fit?\n3. What lifestyle changes would have the biggest impact for me specifically?\n4. How often should I be monitoring at home?\n\nI can add these to a note you bring to your Jun 30 appointment with Dr. Johnson. Want me to do that?",
     suggestions: ["Save these questions", "What is good blood pressure?", "Reschedule appointment"],
+    recommendations: { doctorSlugs: ["sarah-johnson"], clinicSlugs: ["alexandria-heart-institute"] },
   },
   {
     match: /diet|nutrition|eat|food|weight/i,

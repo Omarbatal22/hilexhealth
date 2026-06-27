@@ -1,6 +1,6 @@
 "use client";
 
-import { Globe, Menu, X } from "lucide-react";
+import { Globe, Menu, X, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { NAV_LINKS } from "@/lib/site-data";
 import { cn } from "@/lib/utils";
+import { GlobalSearch } from "@/components/sections/search/global-search";
 
 /**
  * Sticky top navigation. Transparent over the hero, then settles into a
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 export function Navbar() {
   const [scrolled, setScrolled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
   const pathname = usePathname();
 
   React.useEffect(() => {
@@ -34,6 +36,18 @@ export function Navbar() {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  // Bind Cmd+K and Ctrl+K globally
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <header
@@ -79,6 +93,17 @@ export function Navbar() {
         <div className="hidden items-center gap-3 lg:flex">
           <button
             type="button"
+            onClick={() => setSearchOpen(true)}
+            className="inline-flex items-center gap-2 rounded-xl border border-border-soft bg-surface/50 px-3 py-1.5 text-xs text-ink-soft transition-all hover:bg-surface hover:text-navy"
+          >
+            <Search className="h-3.5 w-3.5 text-ink-muted" />
+            <span>Search</span>
+            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-bold text-ink-muted bg-white border border-border-soft rounded-md">
+              ⌘K
+            </kbd>
+          </button>
+          <button
+            type="button"
             className="inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 text-sm font-medium text-ink-soft transition-colors hover:text-primary"
           >
             <Globe className="h-4 w-4" />
@@ -92,16 +117,25 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy transition-colors hover:bg-primary-bg lg:hidden"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        {/* Mobile search & toggle */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Open search"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy transition-colors hover:bg-primary-bg"
+          >
+            <Search className="h-5.5 w-5.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-navy transition-colors hover:bg-primary-bg"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </Container>
 
       {/* Mobile panel */}
@@ -136,6 +170,7 @@ export function Navbar() {
           </div>
         </Container>
       </div>
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

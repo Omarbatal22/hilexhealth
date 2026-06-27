@@ -56,6 +56,8 @@ export interface Appointment {
   time: string;
   mode: "In-person" | "Video visit";
   status: "Confirmed" | "Pending";
+  facilityId?: string;
+  branchId?: string;
 }
 
 export const UPCOMING_APPOINTMENTS: Appointment[] = [
@@ -67,6 +69,8 @@ export const UPCOMING_APPOINTMENTS: Appointment[] = [
     time: "4:30 PM",
     mode: "In-person",
     status: "Confirmed",
+    facilityId: "helix-medical-center",
+    branchId: "helix-nasr-city",
   },
   {
     doctorSlug: "david-kim",
@@ -76,6 +80,8 @@ export const UPCOMING_APPOINTMENTS: Appointment[] = [
     time: "10:30 AM",
     mode: "Video visit",
     status: "Confirmed",
+    facilityId: "nile-care-clinic",
+    branchId: "nile-dokki",
   },
   {
     doctorSlug: "aisha-patel",
@@ -85,6 +91,8 @@ export const UPCOMING_APPOINTMENTS: Appointment[] = [
     time: "5:45 PM",
     mode: "Video visit",
     status: "Pending",
+    facilityId: "nile-care-clinic",
+    branchId: "nile-dokki",
   },
 ];
 
@@ -97,6 +105,8 @@ export const PAST_APPOINTMENTS: Appointment[] = [
     time: "9:00 AM",
     mode: "In-person",
     status: "Confirmed",
+    facilityId: "nile-care-clinic",
+    branchId: "nile-dokki",
   },
   {
     doctorSlug: "sarah-johnson",

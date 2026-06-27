@@ -3,8 +3,10 @@ import {
   CalendarCheck,
   MapPin,
   Video,
+  Building,
 } from "lucide-react";
 import Link from "next/link";
+import { getClinic, getBranchesForClinic } from "@/lib/clinics";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +19,9 @@ import type { Doctor } from "@/lib/doctors";
  * Middle: identity, rating, meta. Right: fee + booking CTAs.
  */
 export function DoctorCard({ doctor }: { doctor: Doctor }) {
+  const primaryClinic = doctor.primaryClinicId ? getClinic(doctor.primaryClinicId) : null;
+  const clinicBranches = primaryClinic ? getBranchesForClinic(primaryClinic.id) : [];
+
   return (
     <Card interactive className="p-5 sm:p-6">
       <div className="flex flex-col gap-5 sm:flex-row">
@@ -55,6 +60,12 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
               <MapPin className="h-4 w-4 text-ink-muted" />
               {doctor.location} · {doctor.distanceMi} mi
             </span>
+            {primaryClinic && (
+              <span className="inline-flex items-center gap-1.5 text-sm text-ink-soft">
+                <Building className="h-4 w-4 text-ink-muted" />
+                {primaryClinic.name} ({clinicBranches.length} {clinicBranches.length === 1 ? "branch" : "branches"})
+              </span>
+            )}
           </div>
 
           <div className="mt-3 flex flex-wrap gap-2">

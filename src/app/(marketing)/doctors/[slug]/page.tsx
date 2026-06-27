@@ -6,6 +6,7 @@ import {
   Languages,
   MapPin,
   Stethoscope,
+  Building,
 } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -13,10 +14,12 @@ import { notFound } from "next/navigation";
 import { BookingWidget } from "@/components/sections/doctors/booking-widget";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
 import { Container } from "@/components/ui/container";
 import { StarRating } from "@/components/ui/star-rating";
 import { DOCTORS, getDoctor } from "@/lib/doctors";
+import { getClinicsForDoctor, getBranchesForClinic } from "@/lib/clinics";
 
 export function generateStaticParams() {
   return DOCTORS.map((d) => ({ slug: d.slug }));
@@ -40,6 +43,8 @@ export default async function DoctorProfilePage(
   const { slug } = await props.params;
   const doctor = getDoctor(slug);
   if (!doctor) notFound();
+
+  const doctorClinics = getClinicsForDoctor(doctor.slug);
 
   return (
     <div className="bg-gradient-to-b from-primary-bg via-soft-bg to-white pb-20">
@@ -135,6 +140,47 @@ export default async function DoctorProfilePage(
                     </ul>
                   </InfoBlock>
                 </div>
+              </CardBody>
+            </Card>
+
+            {/* Practice Clinics */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Clinics & Affiliations</CardTitle>
+              </CardHeader>
+              <CardBody className="-mt-2 space-y-4">
+                {doctorClinics.map((clinic) => {
+                  const branches = getBranchesForClinic(clinic.id).filter(b => b.doctorIds.includes(doctor.slug));
+                  return (
+                    <div key={clinic.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-2xl border border-border-soft bg-surface/50">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <Building className="h-4 w-4 text-primary shrink-0" />
+                          <h4 className="font-semibold text-navy text-sm line-clamp-1">{clinic.name}</h4>
+                          <span className="text-xs text-ink-muted capitalize">({clinic.type.replace("_", " ")})</span>
+                        </div>
+                        <p className="text-xs text-ink-soft mt-1 line-clamp-2">{clinic.tagline}</p>
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {branches.map((b) => (
+                            <Link
+                              key={b.id}
+                              href={`/clinics/${clinic.slug}/branches/${b.slug}`}
+                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline bg-primary-soft/40 px-2 py-0.5 rounded-full"
+                            >
+                              <MapPin className="h-3 w-3 shrink-0 text-primary" />
+                              {b.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm" className="shrink-0" asChild>
+                        <Link href={`/book?doctor=${doctor.slug}&clinic=${clinic.slug}`}>
+                          Book at this clinic
+                        </Link>
+                      </Button>
+                    </div>
+                  );
+                })}
               </CardBody>
             </Card>
 

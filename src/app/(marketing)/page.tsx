@@ -2,6 +2,7 @@ import { Hero } from "@/components/sections/hero";
 import { BookingSearch } from "@/components/sections/booking-search";
 import { FeatureBar } from "@/components/sections/feature-bar";
 import { Services } from "@/components/sections/services";
+import { FeaturedClinics } from "@/components/sections/clinics/featured-clinics";
 import { Stats } from "@/components/sections/stats";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <BookingSearch />
       <FeatureBar />
       <Services />
+      <FeaturedClinics />
       <Stats />
     </>
   );

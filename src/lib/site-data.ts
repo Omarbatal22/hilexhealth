@@ -26,6 +26,7 @@ export interface NavLink {
 
 export const NAV_LINKS: NavLink[] = [
   { label: "Find Doctors", href: "/doctors" },
+  { label: "Clinics", href: "/clinics" },
   { label: "AI Assistant", href: "/assistant" },
   { label: "Dashboard", href: "/dashboard" },
   { label: "Health Tools", href: "#health-tools" },
@@ -188,6 +189,18 @@ export const GOVERNORATES: string[] = [
 ];
 
 export const DISTRICTS: string[] = [
+  "Nasr City",
+  "Maadi",
+  "Heliopolis",
+  "Zamalek",
+  "Dokki",
+  "Mohandessin",
+  "New Cairo",
+  "6th of October",
+];
+
+export const CITIES: string[] = ["Cairo", "Giza", "Alexandria", "6th of October"];
+export const AREAS: string[] = [
   "Nasr City",
   "Maadi",
   "Heliopolis",

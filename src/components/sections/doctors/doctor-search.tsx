@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import * as React from "react";
 import { DoctorCard } from "@/components/sections/doctors/doctor-card";
+import { FilterGroup, FilterRadio, FilterToggle } from "@/components/sections/search/filters";
 import { Badge } from "@/components/ui/badge";
+import { getClinicsForDoctor, getBranchesForClinic, INSURANCERS } from "@/lib/clinics";
+import { GOVERNORATES } from "@/lib/site-data";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Input } from "@/components/ui/input";
@@ -26,6 +29,8 @@ const RATING_OPTIONS = [4.9, 4.8, 4.5, 0] as const;
 export function DoctorSearch() {
   const [query, setQuery] = React.useState("");
   const [specialty, setSpecialty] = React.useState<string | null>(null);
+  const [governorate, setGovernorate] = React.useState("all");
+  const [insurance, setInsurance] = React.useState("all");
   const [todayOnly, setTodayOnly] = React.useState(false);
   const [videoOnly, setVideoOnly] = React.useState(false);
   const [minRating, setMinRating] = React.useState(0);
@@ -39,6 +44,23 @@ export function DoctorSearch() {
       if (todayOnly && !d.availableToday) return false;
       if (videoOnly && !d.videoVisit) return false;
       if (d.rating < minRating) return false;
+      
+      // Governorate Filter
+      if (governorate !== "all") {
+        const clinics = getClinicsForDoctor(d.slug);
+        const hasBranchInGov = clinics.some(c => 
+          getBranchesForClinic(c.id).some(b => b.address.governorate === governorate)
+        );
+        if (!hasBranchInGov) return false;
+      }
+
+      // Insurance Filter
+      if (insurance !== "all") {
+        const clinics = getClinicsForDoctor(d.slug);
+        const acceptsInsurance = clinics.some(c => c.insuranceIds.includes(insurance));
+        if (!acceptsInsurance) return false;
+      }
+
       if (q) {
         const hay = `${d.name} ${d.specialty} ${d.title} ${d.focusAreas.join(
           " "
@@ -55,16 +77,20 @@ export function DoctorSearch() {
       return 0;
     });
     return list;
-  }, [query, specialty, todayOnly, videoOnly, minRating, sort]);
+  }, [query, specialty, todayOnly, videoOnly, minRating, sort, governorate, insurance]);
 
   const activeFilterCount =
     (specialty ? 1 : 0) +
+    (governorate !== "all" ? 1 : 0) +
+    (insurance !== "all" ? 1 : 0) +
     (todayOnly ? 1 : 0) +
     (videoOnly ? 1 : 0) +
     (minRating > 0 ? 1 : 0);
 
   function reset() {
     setSpecialty(null);
+    setGovernorate("all");
+    setInsurance("all");
     setTodayOnly(false);
     setVideoOnly(false);
     setMinRating(0);
@@ -101,6 +127,34 @@ export function DoctorSearch() {
           checked={videoOnly}
           onChange={setVideoOnly}
         />
+      </FilterGroup>
+
+      <FilterGroup title="Governorate">
+        <select
+          value={governorate}
+          aria-label="Select Governorate"
+          onChange={(e) => setGovernorate(e.target.value)}
+          className="w-full rounded-xl border border-border-soft bg-surface px-3 py-2 text-sm text-ink-soft focus:border-primary focus:outline-none"
+        >
+          <option value="all">All Governorates</option>
+          {GOVERNORATES.map(g => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
+      </FilterGroup>
+
+      <FilterGroup title="Accepted Insurance">
+        <select
+          value={insurance}
+          aria-label="Select Insurance"
+          onChange={(e) => setInsurance(e.target.value)}
+          className="w-full rounded-xl border border-border-soft bg-surface px-3 py-2 text-sm text-ink-soft focus:border-primary focus:outline-none"
+        >
+          <option value="all">All Insurances</option>
+          {INSURANCERS.map(ins => (
+            <option key={ins.id} value={ins.id}>{ins.label}</option>
+          ))}
+        </select>
       </FilterGroup>
 
       <FilterGroup title="Patient rating">
@@ -297,90 +351,4 @@ export function DoctorSearch() {
   );
 }
 
-/* ---------------- small filter primitives ---------------- */
 
-function FilterGroup({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <h3 className="mb-2.5 text-xs font-bold uppercase tracking-[0.18em] text-ink-muted">
-        {title}
-      </h3>
-      {children}
-    </div>
-  );
-}
-
-function FilterRadio({
-  label,
-  checked,
-  onClick,
-}: {
-  label: string;
-  checked: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={checked}
-      className={cn(
-        "flex items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition-colors",
-        checked
-          ? "bg-primary-bg font-semibold text-primary"
-          : "text-ink-soft hover:bg-surface"
-      )}
-    >
-      <span
-        className={cn(
-          "flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2",
-          checked ? "border-primary" : "border-border-soft"
-        )}
-      >
-        {checked && <span className="h-2 w-2 rounded-full bg-primary" />}
-      </span>
-      {label}
-    </button>
-  );
-}
-
-function FilterToggle({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2 text-left text-sm text-ink-soft transition-colors hover:bg-surface"
-    >
-      {label}
-      <span
-        className={cn(
-          "relative h-6 w-11 shrink-0 rounded-full transition-colors",
-          checked ? "bg-primary" : "bg-border-soft"
-        )}
-      >
-        <span
-          className={cn(
-            "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform",
-            checked ? "translate-x-[22px]" : "translate-x-0.5"
-          )}
-        />
-      </span>
-    </button>
-  );
-}

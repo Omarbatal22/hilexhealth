@@ -19,6 +19,7 @@ import {
   type Appointment,
 } from "@/lib/dashboard-data";
 import { cn } from "@/lib/utils";
+import { getClinic, BRANCHES } from "@/lib/clinics";
 
 type Tab = "upcoming" | "past";
 
@@ -35,7 +36,6 @@ export function AppointmentsList() {
             key={t}
             type="button"
             onClick={() => setTab(t)}
-            aria-pressed={tab === t}
             className={cn(
               "rounded-full px-5 py-2 text-sm font-semibold capitalize transition-colors",
               tab === t
@@ -75,6 +75,9 @@ function AppointmentRow({
   appt: Appointment;
   past: boolean;
 }) {
+  const clinic = appt.facilityId ? getClinic(appt.facilityId) : null;
+  const branch = appt.branchId ? BRANCHES.find((b) => b.id === appt.branchId) : null;
+
   return (
     <li className="rounded-[var(--radius-card)] border border-border-soft bg-white p-5 shadow-[var(--shadow-soft)] transition-all hover:shadow-[var(--shadow-medium)]">
       <div className="flex flex-wrap items-center gap-4">
@@ -110,11 +113,16 @@ function AppointmentRow({
             </span>
             <span className="inline-flex items-center gap-1.5">
               {appt.mode === "Video visit" ? (
-                <Video className="h-4 w-4 text-ink-muted" />
+                <>
+                  <Video className="h-4 w-4 text-ink-muted" />
+                  {appt.mode}
+                </>
               ) : (
-                <MapPin className="h-4 w-4 text-ink-muted" />
+                <>
+                  <MapPin className="h-4 w-4 text-ink-muted" />
+                  {clinic && branch ? `${clinic.name} - ${branch.name}` : appt.mode}
+                </>
               )}
-              {appt.mode}
             </span>
           </div>
         </div>

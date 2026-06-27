@@ -55,6 +55,8 @@ export interface Doctor {
   education: string[];
   focusAreas: string[];
   reviews: Review[];
+  primaryClinicId?: string;
+  clinicIds?: string[];
 }
 
 export const DOCTORS: Doctor[] = [
@@ -101,6 +103,8 @@ export const DOCTORS: Doctor[] = [
         body: "Great doctor, slightly long wait time but the care was worth it.",
       },
     ],
+    primaryClinicId: "helix-medical-center",
+    clinicIds: ["helix-medical-center", "alexandria-heart-institute", "smile-dental-center"],
   },
   {
     slug: "michael-chen",
@@ -138,6 +142,8 @@ export const DOCTORS: Doctor[] = [
         body: "Extremely knowledgeable and patient with all my questions.",
       },
     ],
+    primaryClinicId: "helix-medical-center",
+    clinicIds: ["helix-medical-center", "cairo-orthopedic-clinic"],
   },
   {
     slug: "emily-rodriguez",
@@ -175,6 +181,8 @@ export const DOCTORS: Doctor[] = [
         body: "Patient, kind, and incredibly thorough. Highly recommend.",
       },
     ],
+    primaryClinicId: "helix-medical-center",
+    clinicIds: ["helix-medical-center", "smile-dental-center"],
   },
   {
     slug: "james-wilson",
@@ -212,6 +220,8 @@ export const DOCTORS: Doctor[] = [
         body: "Very skilled. Office could be a bit more responsive but the care was top-notch.",
       },
     ],
+    primaryClinicId: "helix-medical-center",
+    clinicIds: ["helix-medical-center", "nile-care-clinic"],
   },
   {
     slug: "aisha-patel",
@@ -249,6 +259,8 @@ export const DOCTORS: Doctor[] = [
         body: "Caught a suspicious mole early. Thorough and reassuring.",
       },
     ],
+    primaryClinicId: "nile-care-clinic",
+    clinicIds: ["nile-care-clinic", "alexandria-heart-institute"],
   },
   {
     slug: "david-kim",
@@ -286,6 +298,8 @@ export const DOCTORS: Doctor[] = [
         body: "Helped me get my diabetes under control. Clear, practical guidance.",
       },
     ],
+    primaryClinicId: "nile-care-clinic",
+    clinicIds: ["nile-care-clinic", "smile-dental-center"],
   },
 ];
 

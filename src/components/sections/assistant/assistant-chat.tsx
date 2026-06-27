@@ -17,6 +17,10 @@ import {
   type ChatMessage,
 } from "@/lib/assistant-data";
 import { cn } from "@/lib/utils";
+import { getDoctor } from "@/lib/doctors";
+import { getClinic } from "@/lib/clinics";
+import { DoctorCard } from "@/components/sections/doctors/doctor-card";
+import { ClinicCard } from "@/components/sections/clinics/clinic-card";
 
 let idCounter = 0;
 const nextId = () => `msg-${++idCounter}`;
@@ -50,12 +54,12 @@ export function AssistantChat({
     setThinking(true);
 
     // Simulate the assistant "thinking" then responding (no backend).
-    const { reply, suggestions } = getReply(trimmed);
+    const { reply, suggestions, recommendations } = getReply(trimmed);
     window.setTimeout(() => {
       setThinking(false);
       setMessages((prev) => [
         ...prev,
-        { id: nextId(), role: "assistant", content: reply, suggestions },
+        { id: nextId(), role: "assistant", content: reply, suggestions, recommendations },
       ]);
     }, 900);
   }, []);
@@ -235,11 +239,24 @@ function MessageBubble({
                 key={s}
                 type="button"
                 onClick={() => onSuggestion(s)}
-                className="rounded-full border border-ai/25 bg-ai/5 px-3.5 py-1.5 text-sm font-medium text-ai transition-colors hover:bg-ai/10"
+                className="rounded-full border border-ai/25 bg-ai/5 px-3.5 py-1.5 text-sm font-medium text-ai transition-colors hover:bg-ai/10 animate-fade-in"
               >
                 {s}
               </button>
             ))}
+          </div>
+        )}
+
+        {message.recommendations && (
+          <div className="mt-3.5 space-y-4 w-full sm:w-[480px] animate-fade-in">
+            {message.recommendations.doctorSlugs?.map((slug) => {
+              const doc = getDoctor(slug);
+              return doc ? <DoctorCard key={slug} doctor={doc} /> : null;
+            })}
+            {message.recommendations.clinicSlugs?.map((slug) => {
+              const clinic = getClinic(slug);
+              return clinic ? <ClinicCard key={slug} facility={clinic} /> : null;
+            })}
           </div>
         )}
       </div>
@@ -257,8 +274,7 @@ function ThinkingBubble() {
         {[0, 1, 2].map((i) => (
           <span
             key={i}
-            className="h-2 w-2 animate-bounce rounded-full bg-ai/60"
-            style={{ animationDelay: `${i * 0.15}s` }}
+            className="h-2 w-2 animate-pulse rounded-full bg-ai/60"
           />
         ))}
       </div>
