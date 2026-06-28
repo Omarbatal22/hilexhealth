@@ -48,7 +48,7 @@ export default async function DoctorProfilePage(
 
   return (
     <div className="bg-gradient-to-b from-primary-bg via-soft-bg to-white pb-20">
-      <Container className="pt-8">
+      <Container size="app" className="pt-8">
         <Link
           href="/doctors"
           className="inline-flex items-center gap-2 text-sm font-medium text-ink-soft transition-colors hover:text-primary"
@@ -56,7 +56,7 @@ export default async function DoctorProfilePage(
           <ArrowLeft className="h-4 w-4" /> Back to search
         </Link>
 
-        <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div className="mt-6 grid gap-8 lg:grid-cols-[1.78fr_1fr]">
           {/* ---------------- Main column ---------------- */}
           <div className="space-y-6">
             {/* Header card */}
@@ -218,7 +218,7 @@ export default async function DoctorProfilePage(
           </div>
 
           {/* ---------------- Sticky booking ---------------- */}
-          <aside className="lg:sticky lg:top-24 lg:self-start">
+          <aside className="lg:sticky lg:top-[var(--sticky-top)] lg:self-start">
             <BookingWidget doctor={doctor} />
           </aside>
         </div>

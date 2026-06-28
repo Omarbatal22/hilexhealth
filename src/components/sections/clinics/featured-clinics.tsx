@@ -13,7 +13,7 @@ export function FeaturedClinics() {
 
   return (
     <section className="bg-gradient-to-b from-white to-soft-bg py-16 sm:py-20 border-t border-border-soft/60">
-      <Container>
+      <Container size="content">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div className="max-w-xl">
             <div className="flex items-center gap-2 text-primary font-semibold text-sm mb-2.5">

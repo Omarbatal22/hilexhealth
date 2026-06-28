@@ -53,7 +53,7 @@ export default async function BranchDetailPage({ params }: PageParams) {
 
   return (
     <section className="bg-soft-bg pb-20 pt-6">
-      <Container>
+      <Container size="app">
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs font-semibold text-ink-soft mb-6 flex-wrap">
           <Link href="/clinics" className="hover:text-primary transition-colors">

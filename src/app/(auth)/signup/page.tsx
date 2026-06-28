@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { AuthForm } from "@/components/sections/auth/auth-form";
+import { OnboardingFlow } from "@/components/sections/auth/onboarding/onboarding-flow";
 import { AuthShell } from "@/components/sections/auth/auth-shell";
 
 export const metadata: Metadata = {
-  title: "Sign up | HelixHealth",
+  title: "Create your account | HelixHealth",
   description: "Create your HelixHealth account — smarter, AI-powered healthcare in one place.",
 };
 
 export default function SignupPage() {
   return (
-    <AuthShell>
-      <AuthForm mode="signup" />
+    <AuthShell size="wide">
+      <OnboardingFlow />
     </AuthShell>
   );
 }

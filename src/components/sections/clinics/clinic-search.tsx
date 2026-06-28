@@ -311,7 +311,7 @@ export function ClinicSearch() {
 
   return (
     <section className="bg-gradient-to-b from-primary-bg via-soft-bg to-white pb-20 pt-10 lg:pt-14">
-      <Container>
+      <Container size="app">
         {/* Search bar & map toggle */}
         <div className="glass-strong flex flex-col gap-3 rounded-[var(--radius-xl2)] p-3 shadow-[var(--shadow-large)] sm:flex-row sm:items-center">
           <div className="flex-1 relative">

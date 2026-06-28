@@ -58,7 +58,7 @@ export function Navbar() {
           : "bg-transparent"
       )}
     >
-      <Container className="flex h-18 items-center justify-between gap-6 py-3">
+      <Container size="content" className="flex h-18 items-center justify-between gap-6 py-3">
         <Link href="/" aria-label="HelixHealth home" className="shrink-0">
           <Logo />
         </Link>
@@ -145,7 +145,7 @@ export function Navbar() {
           open ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <Container className="glass-strong flex flex-col gap-1 border-t border-border-soft py-4">
+        <Container size="content" className="glass-strong flex flex-col gap-1 border-t border-border-soft py-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}

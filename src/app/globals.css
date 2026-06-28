@@ -63,6 +63,30 @@
   --animate-spin-slow: spin 26s linear infinite;
   --animate-pulse-soft: pulse-soft 4s ease-in-out infinite;
   --animate-draw: dash-draw 4s linear infinite;
+
+  /* ---- Layout width scale ---- */
+  --container-prose: 760px;
+  --container-content: 1200px;
+  --container-app: 1440px;
+  --container-wide: 1600px;
+  --container-dashboard: 1760px;
+
+  /* ---- Gutter scale ---- */
+  --gutter-sm: 1.25rem;   /* 20px */
+  --gutter-md: 2rem;      /* 32px */
+  --gutter-lg: 3rem;      /* 48px */
+
+  /* ---- Vertical rhythm / spacing (8px base, 4px half-steps) ---- */
+  --section-y: 5rem;          /* 80px */
+  --stack-gap: 1.5rem;        /* 24px */
+  --card-pad-comfortable: 1.75rem;  /* 28px */
+  --card-pad-compact: 1.25rem;      /* 20px */
+
+  /* ---- Sticky offset (under the navbar) ---- */
+  --sticky-top: 6rem;     /* 96px */
+
+  /* ---- Breakpoint: ultra-wide ---- */
+  --breakpoint-3xl: 1920px;
 }
 
 @keyframes blob-morph {
@@ -135,15 +159,15 @@ body {
 /* Utility: glassmorphism */
 .glass {
   background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .glass-strong {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px) saturate(150%);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
   border: 1px solid rgba(255, 255, 255, 0.65);
 }
 

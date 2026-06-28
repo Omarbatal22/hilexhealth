@@ -172,7 +172,7 @@ export function BookingWizard() {
 
   return (
     <div className="bg-gradient-to-b from-primary-bg via-soft-bg to-white pb-20">
-      <Container className="max-w-3xl pt-8">
+      <Container size="content" className="pt-8">
         {/* Navigation Breadcrumb/Back link */}
         <div className="flex items-center justify-between">
           {step > 1 ? (

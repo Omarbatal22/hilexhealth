@@ -85,7 +85,7 @@ export function AssistantChat({
         aria-hidden
         className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-ai/10 blur-3xl"
       />
-      <Container className="relative grid gap-8 py-10 lg:grid-cols-[1fr_320px] lg:py-14">
+      <Container size="app" className="relative grid gap-8 py-10 lg:grid-cols-[1fr_320px] lg:py-14">
         {/* ---------------- Chat column ---------------- */}
         <div className="flex h-[calc(100vh-9rem)] min-h-[560px] flex-col overflow-hidden rounded-[var(--radius-xl2)] border border-ai/15 bg-white shadow-[var(--shadow-large)]">
           {/* Header */}

@@ -20,7 +20,7 @@ const ACCENT: Record<FeatureCard["accent"], string> = {
 export function FeatureBar() {
   return (
     <section className="relative -mt-2 pb-4">
-      <Container>
+      <Container size="content">
         <Reveal className="overflow-hidden rounded-[var(--radius-xl2)] bg-navy bg-gradient-to-br from-navy via-navy to-navy-light shadow-[var(--shadow-large)]">
           <ul className="grid grid-cols-1 divide-y divide-white/10 sm:grid-cols-2 sm:divide-y-0 lg:grid-cols-4">
             {FEATURE_CARDS.map(({ icon: Icon, title, desc, accent }, i) => (

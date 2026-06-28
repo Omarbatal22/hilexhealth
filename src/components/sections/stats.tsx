@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export function Stats() {
   return (
     <section id="about" className="scroll-mt-24 pb-20 lg:pb-28">
-      <Container>
+      <Container size="content">
         <Reveal className="relative overflow-hidden rounded-[var(--radius-xl3)] bg-gradient-to-br from-navy via-navy-light to-[#2748a8] px-7 py-10 shadow-[var(--shadow-large)] sm:px-10 lg:px-14 lg:py-12">
           {/* faint grid / glow accents */}
           <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl" />

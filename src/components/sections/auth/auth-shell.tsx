@@ -1,12 +1,19 @@
 import { Quote, ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
+import { cn } from "@/lib/utils";
 
 /**
  * Split-panel auth shell: brand/marketing on the left (hidden on mobile),
  * the form card on the right. Shared by login + signup.
  */
-export function AuthShell({ children }: { children: React.ReactNode }) {
+export function AuthShell({
+  children,
+  size = "default",
+}: {
+  children: React.ReactNode;
+  size?: "default" | "wide";
+}) {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       {/* Brand panel */}
@@ -63,7 +70,9 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-center px-6 py-10 sm:px-10">
-          <div className="w-full max-w-md">{children}</div>
+          <div className={cn("w-full transition-all duration-300", size === "wide" ? "max-w-2xl" : "max-w-md")}>
+            {children}
+          </div>
         </div>
       </div>
     </div>

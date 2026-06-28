@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 export function Services() {
   return (
     <section id="health-tools" className="relative scroll-mt-24 py-20 lg:py-28">
-      <Container>
+      <Container size="content">
         {/* Section header — eyebrow + split heading/supporting copy */}
         <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
           <Reveal>

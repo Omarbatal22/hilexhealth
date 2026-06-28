@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 export function BookingSearch() {
   return (
     <section className="relative scroll-mt-24 py-16 lg:py-20" id="book">
-      <Container>
+      <Container size="content">
         <Reveal className="mb-8 text-center">
           <Eyebrow className="mb-3 block">Book With Confidence</Eyebrow>
           <h2 className="text-balance font-display text-4xl font-bold leading-[1.1] tracking-tight text-navy sm:text-5xl">

@@ -57,7 +57,7 @@ export default async function ClinicDetailPage({ params }: PageParams) {
 
   return (
     <section className="bg-soft-bg pb-20 pt-6">
-      <Container>
+      <Container size="wide">
         {/* Back Link */}
         <Link
           href="/clinics"

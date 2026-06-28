@@ -67,7 +67,7 @@ function StoreBadge({ store, sub }: { store: string; sub: string }) {
 export function Footer() {
   return (
     <footer className="mt-auto">
-      <Container className="pb-10">
+      <Container size="content" className="pb-10">
         <div className="rounded-[var(--radius-xl3)] bg-gradient-to-b from-primary-bg to-primary-soft/50 p-8 sm:p-10 lg:p-12">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_2fr]">
             {/* CTA block */}
@@ -145,7 +145,7 @@ export function Footer() {
 
       {/* Dark bottom bar */}
       <div className="bg-navy">
-        <Container className="flex flex-col items-center gap-6 py-6 text-sm text-white/70 md:flex-row md:justify-between">
+        <Container size="content" className="flex flex-col items-center gap-6 py-6 text-sm text-white/70 md:flex-row md:justify-between">
           <div className="flex flex-col items-center gap-2 md:flex-row md:gap-6">
             <Logo invert />
             <span className="text-white/55">

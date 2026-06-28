@@ -38,7 +38,7 @@ const TONE_MAP = {
 export default function DashboardPage() {
   return (
     <div className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-[var(--container-dashboard)]">
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>

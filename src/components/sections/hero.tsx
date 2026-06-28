@@ -31,7 +31,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-gradient-to-b from-primary-bg via-soft-bg to-white pb-12 pt-10 lg:pb-20 lg:pt-16">
       <HeroDecorations />
 
-      <Container className="relative">
+      <Container size="wide" className="relative">
         <div className="grid items-center gap-10 lg:grid-cols-[45fr_55fr] lg:gap-10">
           {/* ---------- Left: message + AI prompt bar ---------- */}
           <div className="max-w-2xl">

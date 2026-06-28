@@ -34,7 +34,7 @@ export function PageHeading({
 export function AppPage({ children }: { children: React.ReactNode }) {
   return (
     <div className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-      <div className="mx-auto max-w-6xl">{children}</div>
+      <div className="mx-auto max-w-[var(--container-dashboard)]">{children}</div>
     </div>
   );
 }

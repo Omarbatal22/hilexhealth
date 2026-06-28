@@ -180,7 +180,7 @@ export function DoctorSearch() {
 
   return (
     <section className="bg-gradient-to-b from-primary-bg via-soft-bg to-white pb-20 pt-10 lg:pt-14">
-      <Container>
+      <Container size="app">
         {/* Heading */}
         <div className="max-w-2xl">
           <h1 className="font-display text-4xl font-bold tracking-tight text-navy sm:text-5xl">
