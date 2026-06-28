@@ -1,0 +1,144 @@
+name: Deploy to MonsterASP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Detect API Project File
+        id: detect-project
+        run: |
+          PROJECT_FILE=$(grep -rl 'Sdk="Microsoft.NET.Sdk.Web"' --include="*.csproj" . | head -n 1)
+          if [ -z "$PROJECT_FILE" ]; then
+            PROJECT_FILE=$(find . -name "*.csproj" | grep -iE "API|Web" | head -n 1)
+          fi
+          if [ -z "$PROJECT_FILE" ]; then
+            echo "Error: No Web/API project detected!"
+            exit 1
+          fi
+          echo "Detected project file: $PROJECT_FILE"
+          echo "PROJECT_FILE=$PROJECT_FILE" >> $GITHUB_ENV
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_FILE }}
+
+      - name: Build project
+        run: dotnet build ${{ env.PROJECT_FILE }} --configuration Release --no-restore
+
+      - name: Publish project
+        run: dotnet publish ${{ env.PROJECT_FILE }} --configuration Release --output ./publish --no-build
+
+      - name: Take Application Offline
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          cat << 'EOF' > app_offline.htm
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Helix Health - System Maintenance</title>
+              <style>
+                  body { font-family: sans-serif; text-align: center; padding: 150px; background: #0f172a; color: #f8fafc; }
+                  h1 { font-size: 50px; }
+                  body { font: 20px Helvetica, sans-serif; color: #e2e8f0; }
+                  article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+                  a { color: #38bdf8; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+              </style>
+          </head>
+          <body>
+          <article>
+              <h1>We&rsquo;ll be back soon!</h1>
+              <div>
+                  <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. We&rsquo;ll be back online shortly!</p>
+                  <p>&mdash; The Helix Health Team</p>
+              </div>
+          </article>
+          </body>
+          </html>
+          EOF
+          python -c "
+          import sys, os
+          from ftplib import FTP, FTP_TLS
+          server = os.environ['FTP_SERVER']
+          username = os.environ['USERNAME']
+          password = os.environ['PASSWORD']
+          try:
+              print('Connecting via FTPS...')
+              ftp = FTP_TLS(server)
+              ftp.login(username, password)
+              ftp.prot_p()
+          except Exception as e:
+              print(f'FTPS failed: {e}. Falling back to plain FTP...')
+              ftp = FTP(server)
+              ftp.login(username, password)
+          try:
+              ftp.cwd('wwwroot')
+          except Exception:
+              pass
+          with open('app_offline.htm', 'rb') as f:
+              ftp.storbinary('STOR app_offline.htm', f)
+          print('Uploaded app_offline.htm successfully.')
+          ftp.quit()
+          "
+
+      - name: Wait for App to Shutdown
+        run: sleep 5
+
+      - name: Deploy to MonsterASP via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          local-dir: ./publish/
+          server-dir: /wwwroot/
+
+      - name: Bring Application Online
+        if: always()
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          USERNAME: ${{ secrets.USERNAME }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+        run: |
+          python -c "
+          import sys, os
+          from ftplib import FTP, FTP_TLS
+          server = os.environ['FTP_SERVER']
+          username = os.environ['USERNAME']
+          password = os.environ['PASSWORD']
+          try:
+              print('Connecting via FTPS...')
+              ftp = FTP_TLS(server)
+              ftp.login(username, password)
+              ftp.prot_p()
+          except Exception as e:
+              print(f'FTPS failed: {e}. Falling back to plain FTP...')
+              ftp = FTP(server)
+              ftp.login(username, password)
+          try:
+              ftp.cwd('wwwroot')
+          except Exception:
+              pass
+          try:
+              ftp.delete('app_offline.htm')
+              print('Deleted app_offline.htm successfully.')
+          except Exception as e:
+              print(f'Could not delete app_offline.htm: {e}')
+          ftp.quit()
+          "

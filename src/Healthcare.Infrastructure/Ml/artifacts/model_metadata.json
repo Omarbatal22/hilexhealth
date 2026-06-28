@@ -1,0 +1,15 @@
+{
+    "ModelName": "triage_xgboost_v1.0",
+    "Algorithm": "XGBoost",
+    "Version": "1.0.0",
+    "TrainingDate": "2026-06-17T15:55:15.033933",
+    "DatasetVersion": "dataset_v1.0",
+    "Metrics": {
+        "Accuracy": 0.994,
+        "Precision": 0.9940494505494506,
+        "Recall": 0.994,
+        "F1": 0.9939558100195185,
+        "RocAuc": 0.9999852676861428,
+        "CriticalRecall": 0.9814814814814814
+    }
+}
