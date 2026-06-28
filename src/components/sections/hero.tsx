@@ -112,14 +112,14 @@ export function Hero() {
         </div>
 
         {/* ---------- Trust strip ---------- */}
-        <motion.ul
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.4 }}
           className="mt-14 grid grid-cols-2 gap-x-6 gap-y-7 sm:grid-cols-4 lg:mt-16"
         >
           {TRUST_ITEMS.map(({ icon: Icon, title, desc }) => (
-            <li key={title} className="flex items-center gap-3">
+            <div key={title} className="flex items-center gap-3">
               <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary-soft/70 text-primary">
                 <Icon className="h-5 w-5" />
               </span>
@@ -129,9 +129,9 @@ export function Hero() {
                 </span>
                 <span className="block text-xs text-ink-muted">{desc}</span>
               </span>
-            </li>
+            </div>
           ))}
-        </motion.ul>
+        </motion.div>
       </Container>
     </section>
   );

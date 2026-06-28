@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardBody, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Reveal } from "@/components/ui/reveal";
 import {
   HEALTH_STATS,
@@ -227,12 +228,7 @@ export default function DashboardPage() {
                           {g.unit}
                         </span>
                       </div>
-                      <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-primary to-primary-light"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
+                      <Progress value={pct} className="mt-2" />
                     </div>
                   );
                 })}
